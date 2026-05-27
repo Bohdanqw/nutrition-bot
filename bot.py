@@ -1,9 +1,7 @@
 import asyncio
-import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from dotenv import load_dotenv
-import os
 import json
 
 load_dotenv()
@@ -15,7 +13,6 @@ dp = Dispatcher()
 ADMIN_ID = 488630121
 WHITELIST_FILE = "whitelist.json"
 
-# Завантаження whitelist
 try:
     with open(WHITELIST_FILE, "r", encoding="utf-8") as f:
         whitelist = set(json.load(f))
@@ -26,14 +23,12 @@ def save_whitelist():
     with open(WHITELIST_FILE, "w", encoding="utf-8") as f:
         json.dump(list(whitelist), f)
 
-# ====================== КОМАНДИ ======================
-
 @dp.message(Command("start"))
 async def start(message: types.Message):
     if message.from_user.id not in whitelist:
         await message.answer("❌ У вас немає доступу.")
         return
-    await message.answer("👋 Привіт! Я приватний бот.\n\nПросто пиши, що з'їв.")
+    await message.answer("👋 Привіт! Приватний бот для харчування.\nПиши що з'їв.")
 
 @dp.message(Command("add"))
 async def add_user(message: types.Message):
@@ -45,7 +40,7 @@ async def add_user(message: types.Message):
         save_whitelist()
         await message.answer(f"✅ Додано {user_id}")
     except:
-        await message.answer("Використання: /add 123456789")
+        await message.answer(" /add 123456789")
 
 @dp.message(Command("remove"))
 async def remove_user(message: types.Message):
@@ -58,24 +53,24 @@ async def remove_user(message: types.Message):
             save_whitelist()
             await message.answer(f"❌ Видалено {user_id}")
     except:
-        await message.answer("Використання: /remove 123456789")
+        await message.answer(" /remove 123456789")
 
 @dp.message(Command("users"))
 async def list_users(message: types.Message):
     if message.from_user.id != ADMIN_ID:
         return
-    await message.answer(f"👥 Всього: {len(whitelist)}\n{list(whitelist)}")
+    await message.answer(f"Користувачі: {list(whitelist)}")
 
 @dp.message()
 async def handle_food(message: types.Message):
     if message.from_user.id not in whitelist:
-        await message.answer("❌ У вас немає доступу.")
+        await message.answer("❌ Немає доступу.")
         return
-    await message.answer(f"✅ Записано:\n{message.text}")
+    await message.answer(f"✅ Записано: {message.text}")
 
 async def main():
-    print("🤖 Бот запущений")
-    await dp.start_polling(bot)
+    print("🤖 Бот запущений...")
+    await dp.start_polling(bot, allowed_updates=types.Update.all())
 
 if __name__ == "__main__":
     asyncio.run(main())
