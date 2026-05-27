@@ -3,7 +3,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 import json
 
-TOKEN = "8301180704:AAFX6zSC_i8clXYABxmAcWywwKIDRL_k0Kk"   # ←←← ВСТАВ СВІЙ ТОКЕН ТУТ !!!!
+TOKEN = "8301180704:AAFX6zSC_i8clXYABxmAcWywwKIDRL_k0Kk"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -25,9 +25,9 @@ def save_whitelist():
 @dp.message(Command("start"))
 async def start(message: types.Message):
     if message.from_user.id not in whitelist:
-        await message.answer("❌ У вас немає доступу.")
+        await message.answer("❌ Немає доступу.")
         return
-    await message.answer("👋 Привіт! Я приватний бот.\n\nПросто пиши, що з'їв.")
+    await message.answer("👋 Привіт! Приватний бот.\nПиши що з'їв.")
 
 @dp.message(Command("add"))
 async def add_user(message: types.Message):
@@ -54,21 +54,15 @@ async def remove_user(message: types.Message):
     except:
         await message.answer(" /remove 123456789")
 
-@dp.message(Command("users"))
-async def list_users(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
-        return
-    await message.answer(f"Користувачі: {list(whitelist)}")
-
 @dp.message()
-async def handle_food(message: types.Message):
+async def handle(message: types.Message):
     if message.from_user.id not in whitelist:
         await message.answer("❌ Немає доступу.")
         return
     await message.answer(f"✅ Записано: {message.text}")
 
 async def main():
-    print("🤖 Бот запущений...")
+    print("Бот запущений...")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
