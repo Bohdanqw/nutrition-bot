@@ -1,9 +1,10 @@
 import asyncio
+import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from dotenv import load_dotenv
-import json
 import os
+import json
 
 load_dotenv()
 
@@ -42,7 +43,7 @@ async def add_user(message: types.Message):
         user_id = int(message.text.split()[1])
         whitelist.add(user_id)
         save_whitelist()
-        await message.answer(f"✅ Додано користувача {user_id}")
+        await message.answer(f"✅ Додано {user_id}")
     except:
         await message.answer("Використання: /add 123456789")
 
@@ -73,7 +74,7 @@ async def handle_food(message: types.Message):
     await message.answer(f"✅ Записано:\n{message.text}")
 
 async def main():
-    print("🤖 Бот запущений...")
+    print("🤖 Бот запущений (Webhook mode recommended)")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
