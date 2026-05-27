@@ -1,10 +1,11 @@
 import asyncio
+import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 import json
 
-# === НАЛАШТУВАННЯ ===
-TOKEN = "8301180704:AAFX6zSC_i8clXYABxmAcWywwKIDRL_k0Kk"   # ←←← ВСТАВ ТОКЕН
+# ================== НАЛАШТУВАННЯ ==================
+TOKEN = os.getenv("BOT_TOKEN")
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
@@ -70,7 +71,7 @@ async def handle_food(message: types.Message):
     await message.answer(f"✅ Записано:\n{message.text}")
 
 async def main():
-    print("🤖 Бот запущений у Webhook режимі...")
+    print("🤖 Бот запущений...")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
