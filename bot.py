@@ -26,14 +26,14 @@ def save_whitelist():
     with open(WHITELIST_FILE, "w", encoding="utf-8") as f:
         json.dump(list(whitelist), f)
 
-# ================== КОМАНДИ ==================
+# ====================== КОМАНДИ ======================
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
     if message.from_user.id not in whitelist:
         await message.answer("❌ У вас немає доступу.")
         return
-    await message.answer("👋 Привіт! Я приватний бот для підрахунку харчування.\n\nПросто пиши, що з'їв.")
+    await message.answer("👋 Привіт! Я приватний бот.\n\nПросто пиши, що з'їв.")
 
 @dp.message(Command("add"))
 async def add_user(message: types.Message):
@@ -74,7 +74,7 @@ async def handle_food(message: types.Message):
     await message.answer(f"✅ Записано:\n{message.text}")
 
 async def main():
-    print("🤖 Бот запущений (Webhook mode recommended)")
+    print("🤖 Бот запущений")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
