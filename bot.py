@@ -1,3 +1,4 @@
+import analysis
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
@@ -74,3 +75,26 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+# ==================== НОВА ФУНКЦІЯ: РОЗРАХУНОК ПРОДУКТІВ ====================
+@dp.message(Command("products"))
+async def cmd_products(message: types.Message):
+    await message.answer(
+        "📊 Розрахунок продуктів та аналіз з додатків\n\n"
+        "Напиши /analyze — і я покажу, які продукти тобі потрібні"
+    )
+
+@dp.message(Command("analyze"))
+async def cmd_analyze(message: types.Message):
+    result = await analysis.analyze_client_data(message.from_user.id)
+    
+    text = (
+        f"📈 Аналіз з {result['app']}\n\n"
+        f"Середній протеїн: {result['avg_protein']} г\n"
+        f"Рекомендація: {result['recommendation']}\n\n"
+        "🛒 Рекомендовані продукти:\n"
+    )
+    
+    for p in result['products']:
+        text += f"• {p['name']} — {p['daily']} на день ({p['reason']})\n"
+    
+    await message.answer(text)
