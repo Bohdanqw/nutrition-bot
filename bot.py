@@ -4,7 +4,7 @@ from aiogram.filters import Command
 import json
 
 # ================== ТОКЕН ==================
-TOKEN = "8301180704:AAFX6zSC_18c1XYABxmAclyywKIDRL_k0Kk"
+TOKEN = "8301180704:AAHErbb8-1D8Yt3ZfkB5FFqEJSOAqo7dFkY"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
