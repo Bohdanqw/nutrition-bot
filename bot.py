@@ -1,17 +1,10 @@
 import asyncio
-import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 import json
 
-print("=== ЗАПУСК БОТА ===")
-print("BOT_TOKEN from env:", os.getenv("BOT_TOKEN") is not None)
-
-TOKEN = os.getenv("BOT_TOKEN")
-
-if not TOKEN:
-    print("❌ ТОКЕН НЕ ЗНАЙДЕНО! Перевір Variables")
-    raise ValueError("BOT_TOKEN is missing!")
+# ================== ТОКЕН ==================
+TOKEN = "8301180704:AAFX6zSC_18c1XYABxmAclyywKIDRL_k0Kk"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
@@ -37,7 +30,7 @@ async def start(message: types.Message):
     if message.from_user.id not in whitelist:
         await message.answer("❌ У вас немає доступу.")
         return
-    await message.answer("👋 Привіт! Я приватний бот для харчування.")
+    await message.answer("👋 Привіт! Я приватний бот для харчування.\n\nПросто пиши, що з'їв.")
 
 @dp.message(Command("add"))
 async def add_user(message: types.Message):
@@ -47,7 +40,7 @@ async def add_user(message: types.Message):
         user_id = int(message.text.split()[1])
         whitelist.add(user_id)
         save_whitelist()
-        await message.answer(f"✅ Додано {user_id}")
+        await message.answer(f"✅ Додано користувача {user_id}")
     except:
         await message.answer("Використання: /add 123456789")
 
@@ -63,6 +56,12 @@ async def remove_user(message: types.Message):
             await message.answer(f"❌ Видалено {user_id}")
     except:
         await message.answer("Використання: /remove 123456789")
+
+@dp.message(Command("users"))
+async def list_users(message: types.Message):
+    if message.from_user.id != ADMIN_ID:
+        return
+    await message.answer(f"👥 Всього користувачів: {len(whitelist)}\n{list(whitelist)}")
 
 @dp.message()
 async def handle_food(message: types.Message):
