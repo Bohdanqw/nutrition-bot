@@ -6,7 +6,6 @@ import json
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
@@ -49,52 +48,4 @@ async def remove_user(message: types.Message):
         return
     try:
         user_id = int(message.text.split()[1])
-        if user_id != ADMIN_ID:
-            whitelist.discard(user_id)
-            save_whitelist()
-            await message.answer(f"❌ Видалено {user_id}")
-    except:
-        await message.answer("Використання: /remove 123456789")
-
-@dp.message(Command("users"))
-async def list_users(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
-        return
-    await message.answer(f"👥 Всього: {len(whitelist)}\n{list(whitelist)}")
-
-@dp.message()
-async def handle_food(message: types.Message):
-    if message.from_user.id not in whitelist:
-        await message.answer("❌ Немає доступу.")
-        return
-    await message.answer(f"✅ Записано:\n{message.text}")
-
-async def main():
-    print("🤖 Мій Харчобот запущений!")
-    await dp.start_polling(bot)
-
-if __name__ == "__main__":
-    asyncio.run(main())
-# ==================== НОВА ФУНКЦІЯ: РОЗРАХУНОК ПРОДУКТІВ ====================
-@dp.message(Command("products"))
-async def cmd_products(message: types.Message):
-    await message.answer(
-        "📊 Розрахунок продуктів та аналіз з додатків\n\n"
-        "Напиши /analyze — і я покажу, які продукти тобі потрібні"
-    )
-
-@dp.message(Command("analyze"))
-async def cmd_analyze(message: types.Message):
-    result = await analysis.analyze_client_data(message.from_user.id)
-    
-    text = (
-        f"📈 Аналіз з {result['app']}\n\n"
-        f"Середній протеїн: {result['avg_protein']} г\n"
-        f"Рекомендація: {result['recommendation']}\n\n"
-        "🛒 Рекомендовані продукти:\n"
-    )
-    
-    for p in result['products']:
-        text += f"• {p['name']} — {p['daily']} на день ({p['reason']})\n"
-    
-    await message.answer(text)
+       
