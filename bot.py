@@ -6,7 +6,7 @@ import httpx
 from datetime import datetime, date
 
 BOT_TOKEN = "8867065336:AAFI6Kf2pV0SbtR0gl933x-CgA0b4dz8Vtw"
-GEMINI_API_KEY = "твій_gemini_ключ_сюди"  # ←←← ВСТАВ КЛЮЧ!
+GEMINI_API_KEY = "AIzaSyBhV82mPHjcLVw34N-nFrWEJmLHsnKdDYM"  # ←←← ВСТАВ КЛЮЧ!
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
