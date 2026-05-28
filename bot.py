@@ -1,13 +1,4 @@
-@dp.message(Command("analyze"))
-async def cmd_analyze(message: types.Message):
-    await message.answer(
-        "📈 Аналіз (тестова версія)\n\n"
-        "Середній протеїн: 120 г\n"
-        "Рекомендація: потрібно більше протеїну\n\n"
-        "🛒 Рекомендовані продукти:\n"
-        "• Протеїн Whey 1 кг — 30 г на день\n"
-        "• Креатин 300 г — 5 г на день"
-    )
+import analysis
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
@@ -21,7 +12,6 @@ dp = Dispatcher()
 ADMIN_ID = 488630121
 WHITELIST_FILE = "whitelist.json"
 
-# Завантаження whitelist
 try:
     with open(WHITELIST_FILE, "r", encoding="utf-8") as f:
         whitelist = set(json.load(f))
@@ -57,4 +47,36 @@ async def remove_user(message: types.Message):
         return
     try:
         user_id = int(message.text.split()[1])
-       
+        if user_id != ADMIN_ID:
+            whitelist.discard(user_id)
+            save_whitelist()
+            await message.answer(f"❌ Видалено {user_id}")
+    except:
+        await message.answer("Використання: /remove 123456789")
+
+@dp.message(Command("users"))
+async def list_users(message: types.Message):
+    if message.from_user.id != ADMIN_ID:
+        return
+    await message.answer(f"👥 Всього: {len(whitelist)}\n{list(whitelist)}")
+
+@dp.message(Command("products"))
+async def cmd_products(message: types.Message):
+    await message.answer(
+        "📊 Розрахунок продуктів та аналіз з додатків\n\n"
+        "Напиши /analyze — і я покажу, які продукти тобі потрібні"
+    )
+
+@dp.message(Command("analyze"))
+async def cmd_analyze(message: types.Message):
+    result = await analysis.analyze_client_data(message.from_user.id)
+    
+    text = (
+        f"📈 Аналіз з {result['app']}\n\n"
+        f"Середній протеїн: {result['avg_protein']} г\n"
+        f"Рекомендація: {result['recommendation']}\n\n"
+        "🛒 Рекомендовані продукти:\n"
+    )
+    
+    for p in result['products']:
+        text += f"•
