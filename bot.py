@@ -1,4 +1,13 @@
-import analysis
+@dp.message(Command("analyze"))
+async def cmd_analyze(message: types.Message):
+    await message.answer(
+        "📈 Аналіз (тестова версія)\n\n"
+        "Середній протеїн: 120 г\n"
+        "Рекомендація: потрібно більше протеїну\n\n"
+        "🛒 Рекомендовані продукти:\n"
+        "• Протеїн Whey 1 кг — 30 г на день\n"
+        "• Креатин 300 г — 5 г на день"
+    )
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
