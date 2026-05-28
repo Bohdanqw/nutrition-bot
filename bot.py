@@ -4,7 +4,15 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 import json
 
+print("=== ЗАПУСК БОТА ===")
+print("BOT_TOKEN from env:", os.getenv("BOT_TOKEN") is not None)
+
 TOKEN = os.getenv("BOT_TOKEN")
+
+if not TOKEN:
+    print("❌ ТОКЕН НЕ ЗНАЙДЕНО! Перевір Variables")
+    raise ValueError("BOT_TOKEN is missing!")
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
@@ -22,14 +30,14 @@ def save_whitelist():
     with open(WHITELIST_FILE, "w", encoding="utf-8") as f:
         json.dump(list(whitelist), f)
 
-# ================== АДМІН КОМАНДИ ==================
+# ================== КОМАНДИ ==================
 
 @dp.message(Command("start"))
 async def start(message: types.Message):
     if message.from_user.id not in whitelist:
         await message.answer("❌ У вас немає доступу.")
         return
-    await message.answer("👋 Привіт! Я приватний бот для харчування.\n\nПросто пиши, що з'їв.")
+    await message.answer("👋 Привіт! Я приватний бот для харчування.")
 
 @dp.message(Command("add"))
 async def add_user(message: types.Message):
@@ -39,7 +47,7 @@ async def add_user(message: types.Message):
         user_id = int(message.text.split()[1])
         whitelist.add(user_id)
         save_whitelist()
-        await message.answer(f"✅ Додано користувача {user_id}")
+        await message.answer(f"✅ Додано {user_id}")
     except:
         await message.answer("Використання: /add 123456789")
 
@@ -56,13 +64,6 @@ async def remove_user(message: types.Message):
     except:
         await message.answer("Використання: /remove 123456789")
 
-@dp.message(Command("users"))
-async def list_users(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
-        return
-    await message.answer(f"👥 Всього користувачів: {len(whitelist)}\n\n{list(whitelist)}")
-
-# Загальний обробник (має бути останнім!)
 @dp.message()
 async def handle_food(message: types.Message):
     if message.from_user.id not in whitelist:
@@ -71,7 +72,7 @@ async def handle_food(message: types.Message):
     await message.answer(f"✅ Записано:\n{message.text}")
 
 async def main():
-    print("🤖 Бот запущений...")
+    print("🤖 Бот запущений успішно!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
