@@ -6,7 +6,8 @@ import httpx
 import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-GEMINI_API_KEY = "AIzaSyBhV82mPHjcLVw34N-nFrWEJmLHsnKdDYM"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
@@ -27,8 +28,8 @@ def save_whitelist():
 # ================== AI АНАЛІЗ ==================
 
 async def analyze_food(text: str):
-    if not GEMINI_API_KEY or GEMINI_API_KEY == "твій_gemini_ключ_сюди":
-        return {"protein": 0, "fat": 0, "carbs": 0, "calories": 0, "comment": "AI не налаштовано (встав ключ)"}
+    if not GEMINI_API_KEY:
+        return {"protein": 0, "fat": 0, "carbs": 0, "calories": 0, "comment": "AI не налаштовано (додай GEMINI_API_KEY в Variables)"}
     
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
     headers = {"Content-Type": "application/json"}
